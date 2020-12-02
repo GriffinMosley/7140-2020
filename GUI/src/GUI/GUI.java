@@ -47,8 +47,8 @@ public class GUI extends JFrame {
         JFrame frame = new JFrame();
         JLabel jLabel = new JLabel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Boolean test = true;
         JButton readButton = new JButton("OPEN FILE");
+        
         readButton.addActionListener(ev -> { 
           int returnVal = fc.showOpenDialog(frame);
           if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -79,8 +79,6 @@ public class GUI extends JFrame {
                 BufferedImage bufImg = ImageIO.read(new File("output.jpg"));
                 ImageIcon imageIcon = new ImageIcon(bufImg);
                 jLabel.setIcon(imageIcon);
-                jLabel.repaint();
-                jLabel.revalidate();
                 frame.setName(file.getName());
                 frame.getContentPane().add(jLabel, BorderLayout.CENTER);
                 frame.repaint();
