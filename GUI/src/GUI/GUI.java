@@ -19,21 +19,16 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import org.apache.commons.io.FilenameUtils;
  
  
 public class GUI extends JFrame {
  
     public GUI(String ditaa) {
-        try{
-            File temp = new File(ditaa);
-            boolean exists = temp.exists();
-            if (!exists){
-                System.out.println("Can not find ditaa");
-                System.exit(0);
-            }
-        }
-        catch(Exception e){
-            System.out.println(e);
+        File t = new File(ditaa);
+        if (!t.exists()){
+            System.out.println("Unable to find ditaa jar. Closing");
+            System.exit(0);
         }
         
         
@@ -73,6 +68,7 @@ public class GUI extends JFrame {
                 System.out.println(new String(c));
             }
             catch(Exception e){
+                System.out.println("Unable to run ditaa");
                 System.out.println(e);
             }
             try{
@@ -85,8 +81,9 @@ public class GUI extends JFrame {
                 frame.revalidate();
             }
             catch (Exception e){
+                    System.out.println("Unable to read output file");
                     System.out.println(e);
-                    }
+            }
           }});
         frame.getContentPane().add(readButton, BorderLayout.PAGE_END);
         frame.setPreferredSize(new Dimension(width, height));
@@ -97,17 +94,24 @@ public class GUI extends JFrame {
     }
      
     public static void main(String[] args) {
-        String ditaa = args[0];
-        if (ditaa.equals("-h")){
-            System.out.println("To run: java -jar GUI.jar (path to ditaa)");
+        try{
+            String ditaa = args[0];
+            if (!FilenameUtils.getExtension(ditaa).equals("jar") || !FilenameUtils.getName(ditaa).toLowerCase().contains("ditaa")){
+                System.out.println("Please provide the ditaa jar.");
+                System.out.println("java -jar GUI.jar ditaa.jar");
+                System.exit(0);
+            }
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    new GUI(ditaa).setVisible(true);
+                }
+            });
+        }
+        catch(Exception e){
+            System.out.println("Please provide the ditaa jar");
+            System.out.println("java -jar GUI.jar ditaa.jar");
             System.exit(0);
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new GUI(ditaa).setVisible(true);
-            }
-        });
-    }
  
-}
+}}
